@@ -1,5 +1,3 @@
-'use strict';
-
 const express = require("express");
 
 // create express application instance
@@ -16,7 +14,7 @@ app.use(express.json());
 
 
 var allowCrossDomain = function(req, res, next) {
-  res.header('Access-Control-Allow-Origin', 'localhost:3000');
+  res.header('Access-Control-Allow-Origin', 'localhost:3001');
   res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
   res.header('Access-Control-Allow-Headers', 'Content-Type');
   next();
@@ -122,15 +120,7 @@ app.post("/get_products", function(req, res) {
   }
 });
 
-app.get('/', (req, res) => {
-  res.status(200).send('Este si!').end();
-});
-
 app.listen(8080, () => {
-  console.log("El servidor está inicializado en el puerto 8080");
+  console.log("El servidor está inicializado en el puerto 3000");
 });
-
-module.exports = app;
-
-
 
