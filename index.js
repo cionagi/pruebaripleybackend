@@ -120,6 +120,13 @@ app.post("/get_products", function(req, res) {
   }
 });
 
+app.get('/', (req, res) => {
+  res.status(200).send('Este si!').end();
+});
+
 app.listen(3001, () => {
   console.log("El servidor está inicializado en el puerto 3000");
 });
+
+
+
