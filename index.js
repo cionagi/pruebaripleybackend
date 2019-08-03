@@ -5,18 +5,19 @@ const app = express();
 const https = require("https");
 var redis = require("redis");
 var bodyParser = require("body-parser");
+var cors = require('cors')
 // create and connect redis client to local instance.
 var client = redis.createClient();
 app.use(express.urlencoded());
 app.use(express.json());
-
+app.use(cors())
 
 
 
 var allowCrossDomain = function(req, res, next) {
   res.header('Access-Control-Allow-Origin', '*');
-  res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
   res.header('Access-Control-Allow-Headers', 'Content-Type');
+  res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,PATCH,OPTIONS');
   next();
 }
 app.use(allowCrossDomain);
