@@ -67,13 +67,19 @@ app.post("/get_product_by_id", function(req, res) {
   // });
 });
 
+app.get("/reset", function(req, res) {
+// Clear all redis
+  client.flushall()
+  res.status(200).send('Reset data ok')
+});
+
 app.post("/get_products", function(req, res, next) {
   const productsIds = req.body.ids;
   const offset = req.body.offset;
   const limit = req.body.limit;
   const productsRedisKey = "products";
-  const ProductSkuCopy = PRODUCTSSKUS.slice(0);
-  const ProductSkuFilter = ProductSkuCopy.splice(offset, limit + offset);
+  const ProductSkuCopy = [...PRODUCTSSKUS];
+  const ProductSkuFilter = ProductSkuCopy.splice(offset, limit);
 
   function fetch_retry(url) {
     let request = https
@@ -84,7 +90,8 @@ app.post("/get_products", function(req, res, next) {
         });
 
         resp.on("end", () => {
-          let productList;
+          let productList = [];
+          
           JSON.parse(data).map(product => {
             const {
               uniqueID,
@@ -94,19 +101,16 @@ app.post("/get_products", function(req, res, next) {
               prices,
               shortDescription
             } = product;
-            productList = {
-              ...productList,
-              [uniqueID]: {
-                uniqueID,
-                partNumber,
-                name,
-                images,
-                prices,
-                shortDescription
-              }
-            };
+
+            productList.push({
+              uniqueID,
+              partNumber,
+              name,
+              images,
+              prices,
+              shortDescription
+            })
           });
-          client.set(productsRedisKey, productList.toString());
           res.status(200).json(productList);
         });
       })
@@ -133,5 +137,5 @@ app.post("/get_products", function(req, res, next) {
 });
 
 app.listen(8080, () => {
-  console.log("El servidor está inicializado en el puerto 3000");
+  console.log("El servidor está inicializado en el puerto 8080");
 });
